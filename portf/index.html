@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROBSTA Portfolio | Merkie, Jayr & Mark Lester</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        probsta: '#ff8820',
+                        darkBg: '#222222'
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+                        'pop-in': 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        popIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.9) translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #111827 0%, #1f2937 50%, #222222 100%);
+            color: #ffffff;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(34, 34, 34, 0.8);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ff8820;
+            border-radius: 4px;
+        }
+
+        /* Glassmorphism Classes */
+        .glass {
+            background: rgba(30, 30, 30, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 136, 32, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(0, 0, 0, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 136, 32, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 136, 32, 0.5);
+            box-shadow: 0 15px 30px -10px rgba(255, 136, 32, 0.3);
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.5) 100%);
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(90deg, #ffffff, #ff8820);
+        }
+
+        /* Vanta Background Container */
+        #vanta-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* Reading Progress Bar */
+        #progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            border-radius: 2px;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: #ff8820;
+            width: 0%;
+            transition: width 0.1s ease;
+            border-radius: 2px;
+        }
+
+        /* Modal Transitions */
+        #modal-backdrop.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #modal-backdrop {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        #modal-content.hidden-modal {
+            transform: scale(0.95) translateY(10px);
+            opacity: 0;
+        }
+
+        #modal-content {
+            transform: scale(1) translateY(0);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Modal Discussion Typography */
+        #modal-discussion h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        #modal-discussion h3:first-child {
+            margin-top: 0;
+        }
+
+        #modal-discussion h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ff8820;
+            margin-bottom: 0.5rem;
+            margin-top: 1.25rem;
+        }
+
+        #modal-discussion p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        #modal-discussion ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        #modal-discussion li {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        #modal-discussion strong {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 136, 32, 0.5);
+            border-radius: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 136, 32, 0.8);
+        }
+    </style>
+</head>
+
+<body class="antialiased flex flex-col selection:bg-probsta selection:text-white">
+
+    <!-- Hero Section with Vanta Container -->
+    <div class="relative min-h-screen flex items-center justify-center w-full overflow-hidden" id="hero-container">
+        <!-- Vanta.js Background Container -->
+        <div id="vanta-bg"></div>
+
+        <!-- Navigation -->
+        <nav
+            class="fixed w-full z-40 top-0 glass border-b-0 border-white/5 py-4 px-6 md:px-12 flex justify-between items-center transition-all duration-300">
+            <div class="font-bold text-xl tracking-wider text-white">
+                <i class="fas fa-chart-line text-probsta mr-2"></i>PROBSTA
+            </div>
+            <div class="hidden md:flex gap-6 text-sm font-medium">
+                <a href="#hero-container" class="text-gray-300 hover:text-probsta transition-colors">Home</a>
+                <a href="#lessons-section" class="text-gray-300 hover:text-probsta transition-colors">Lessons</a>
+                <a href="#team-section" class="text-gray-300 hover:text-probsta transition-colors">Our Team</a>
+            </div>
+        </nav>
+
+        <section id="home"
+            class="relative z-10 text-center glass px-8 py-12 md:py-16 rounded-3xl animate-fade-in-up w-full max-w-4xl mx-4 sm:mx-auto">
+            <p class="text-probsta uppercase tracking-widest text-sm font-semibold mb-3">Course Showcase</p>
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6">
+                <span class="text-white">PROBSTA</span> <span class="text-gradient">Portfolio</span>
+            </h1>
+            <h2 class="text-xl md:text-2xl font-medium text-gray-200 mb-6">Probability & Statistics</h2>
+            <p class="text-gray-400 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+                An interactive exploration of fundamental statistical concepts, distributions, and analytical tools.
+                Presented by Jayr Lista and Mark Lester Quibuyen.
+            </p>
+            <a href="#lessons-section"
+                class="inline-block mt-8 px-8 py-3 rounded-full bg-probsta text-white font-semibold shadow-[0_0_20px_rgba(255,136,32,0.4)] hover:shadow-[0_0_30px_rgba(255,136,32,0.6)] hover:-translate-y-1 transition-all duration-300">
+                Explore Lessons
+            </a>
+        </section>
+
+        <!-- Scroll Indicator -->
+        <a href="#lessons-section"
+            class="absolute bottom-10 z-10 text-white/50 hover:text-probsta hover:scale-110 transition-all duration-300 animate-bounce">
+            <i class="fas fa-chevron-down text-3xl"></i>
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <main
+        class="relative z-10 flex-grow flex flex-col items-center w-full px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pt-10">
+
+        <!-- Lessons Section -->
+        <section id="lessons-section" class="w-full mb-24 pt-20">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-white mb-2">Course Topics</h2>
+                <div class="w-16 h-1 bg-probsta mx-auto rounded-full"></div>
+            </div>
+
+            <!-- Search and Filter Navigation -->
+            <div class="flex flex-col items-center gap-6 mb-12 w-full z-10 relative">
+                <!-- Search Bar -->
+                <div class="w-full max-w-md relative group">
+                    <i
+                        class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-probsta transition-colors"></i>
+                    <input type="text" id="search-input" onkeyup="handleSearch()"
+                        placeholder="Search topics, concepts, or terms..."
+                        class="w-full bg-black/20 border border-white/10 rounded-full py-3 pl-12 pr-4 text-white placeholder-gray-400 focus:outline-none focus:border-probsta/50 focus:ring-1 focus:ring-probsta/50 transition-all glass shadow-lg">
+                </div>
+
+                <!-- Filter Buttons -->
+                <div class="flex flex-wrap justify-center gap-3">
+                    <button onclick="filterLessons('all')" id="btn-all"
+                        class="filter-btn px-6 py-2 rounded-full bg-probsta text-white shadow-[0_0_15px_rgba(255,136,32,0.4)] font-medium text-sm transition-all duration-300 border border-transparent hover:scale-105">All
+                        Topics</button>
+                    <button onclick="filterLessons('midterm')" id="btn-midterm"
+                        class="filter-btn px-6 py-2 rounded-full glass text-gray-300 hover:text-white hover:border-probsta/50 font-medium text-sm transition-all duration-300 hover:scale-105">Midterm
+                        Topics</button>
+                    <button onclick="filterLessons('finals')" id="btn-finals"
+                        class="filter-btn px-6 py-2 rounded-full glass text-gray-300 hover:text-white hover:border-probsta/50 font-medium text-sm transition-all duration-300 hover:scale-105">Finals
+                        Topics</button>
+                </div>
+            </div>
+
+            <!-- Lessons Grid (Populated by JS) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full" id="lessons-grid">
+                <!-- Cards injected here -->
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section id="team-section" class="w-full mb-20 pt-10">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white mb-2">Meet the Team</h2>
+                <div class="w-16 h-1 bg-probsta mx-auto rounded-full mb-4"></div>
+                <p class="text-gray-400">The minds behind this interactive portfolio</p>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-8">
+                <!-- Member 1 -->
+                <div class="glass-card rounded-2xl p-6 text-center w-full sm:w-64 flex flex-col items-center animate-fade-in-up"
+                    style="animation-delay: 0.1s;">
+                    <div
+                        class="w-24 h-24 rounded-full mb-4 flex items-center justify-center text-3xl font-bold text-white bg-gradient-to-tr from-orange-600 to-probsta shadow-lg shadow-probsta/30">
+                        JL
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Jayr Lista</h3>
+                    <p class="text-probsta text-sm mt-1">Data Analyst / Web Developer</p>
+                </div>
+
+                <!-- Member 2 -->
+                <div class="glass-card rounded-2xl p-6 text-center w-full sm:w-64 flex flex-col items-center animate-fade-in-up"
+                    style="animation-delay: 0.2s;">
+                    <div
+                        class="w-24 h-24 rounded-full mb-4 flex items-center justify-center text-3xl font-bold text-white bg-gradient-to-tr from-orange-600 to-probsta shadow-lg shadow-probsta/30">
+                        MQ
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Mark Lester Quibuyen</h3>
+                    <p class="text-probsta text-sm mt-1">Data Analyst / UI Designer</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer
+            class="mt-auto mb-8 text-center text-gray-500 text-sm glass py-4 px-8 rounded-full w-full max-w-2xl mx-auto">
+            <p>&copy; 2026 PROBSTA Course Portfolio. All rights reserved.</p>
+        </footer>
+    </main>
+
+    <!-- Modal Overlay -->
+    <div id="modal-backdrop"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden opacity-0"
+        onclick="closeModal(event)">
+        <div id="modal-content" class="glass w-[90%] max-w-2xl rounded-2xl p-6 sm:p-8 relative hidden-modal"
+            onclick="event.stopPropagation()">
+            <!-- Close Button -->
+            <button onclick="closeModal()"
+                class="absolute top-4 right-4 text-gray-400 hover:text-white hover:bg-white/10 w-8 h-8 rounded-full flex items-center justify-center transition-colors">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+
+            <!-- Modal Header -->
+            <div class="flex items-center gap-4 mb-6 pb-4 border-b border-white/10 relative">
+                <div id="modal-icon-container"
+                    class="w-14 h-14 shrink-0 rounded-xl bg-probsta/20 flex items-center justify-center text-probsta text-2xl shadow-inner border border-probsta/30">
+                    <i id="modal-icon" class="fas fa-book"></i>
+                </div>
+                <div>
+                    <span id="modal-term"
+                        class="text-xs font-bold uppercase tracking-wider text-probsta mb-1 block">Term</span>
+                    <h3 id="modal-title" class="text-2xl sm:text-3xl font-bold text-white leading-tight">Lesson Title
+                    </h3>
+                </div>
+
+                <!-- Reading Progress Bar -->
+                <div id="progress-container">
+                    <div id="progress-bar"></div>
+                </div>
+            </div>
+
+            <!-- Modal Body (Discussion) -->
+            <div class="mb-8 max-h-[55vh] overflow-y-auto pr-4 custom-scrollbar" id="modal-scroll-area">
+                <div id="modal-discussion" class="text-gray-300 text-sm md:text-base leading-relaxed">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+            <!-- Modal Footer (Credits) -->
+            <div
+                class="mt-6 pt-4 border-t border-white/10 text-center bg-black/20 rounded-xl p-4 border border-white/5">
+                <p class="text-sm text-gray-400 font-medium">
+                    <i class="fas fa-code-branch text-probsta mr-2"></i>
+                    Portfolio by: <span class="text-white">Jayr Lista & Mark Lester Quibuyen</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Required Scripts for Vanta.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.dots.min.js"></script>
+
+    <!-- Application Logic -->
+    <script>
+        // Lesson Data based on syllabus (Expanded Content)
+        const lessonsData = [
+            {
+                id: 1,
+                title: "Introduction to Statistics",
+                term: "midterm",
+                icon: "fa-chart-pie",
+                subtopics: ["Nature of Statistics", "Types of Data and Variables", "Sampling Techniques", "Data Presentation"],
+                discussion: `
+                    <h3>Overview of Statistics</h3>
+                    <p><strong>Statistics</strong> is not just a branch of mathematics; it is the fundamental science of learning from data. By gathering, classifying, summarizing, organizing, analyzing, and interpreting numerical information, we are able to transform raw datasets into actionable intelligence. In the modern world, statistics is integral to fields ranging from business analytics and economics to healthcare and social sciences, allowing professionals to measure uncertainty and make informed, objective decisions.</p>
+
+                    <h4>Key Concepts and Classifications</h4>
+                    <p>The study of statistics is broadly categorized into two main branches: <strong>Descriptive Statistics</strong> and <strong>Inferential Statistics</strong>. Descriptive statistics focuses on presenting and summarizing data through measures of central tendency and charts. In contrast, inferential statistics involves using sample data to make generalized predictions or inferences about a larger population. Understanding this distinction is the absolute cornerstone of statistical analysis.</p>
+
+                    <ul>
+                        <li><strong>Types of Data and Variables:</strong> Data can be classified as <strong>Qualitative (categorical)</strong>, dealing with descriptions and labels, or <strong>Quantitative (numerical)</strong>, dealing with numbers and measurements. Furthermore, numerical variables can be <strong>Discrete</strong> (countable values like the number of students) or <strong>Continuous</strong> (measurable values like height or weight).</li>
+                        <li><strong>Sampling Techniques:</strong> To ensure accurate inferences, data must be collected properly. Common probability sampling methods include Simple Random Sampling, Stratified Sampling, Systematic Sampling, and Cluster Sampling. Using proper techniques significantly minimizes bias and research error.</li>
+                        <li><strong>Data Presentation:</strong> Once collected, data must be visually organized. This is accomplished using tools like frequency distributions, histograms, bar charts, and pie charts, making complex data accessible at a single glance.</li>
+                    </ul>
+
+                    <p>Mastering these foundational concepts is vital, as they pave the way for understanding the more complex probabilistic and predictive models that we will discuss later in this extensive course.</p>
+                `
+            },
+            {
+                id: 2,
+                title: "Measures of Central Tendency & Dispersion",
+                term: "midterm",
+                icon: "fa-balance-scale",
+                subtopics: ["Mean, Median, Mode", "Range", "Variance", "Standard Deviation"],
+                discussion: `
+                    <h3>Discovering the Center of Data</h3>
+                    <p>When analyzing a dataset, the first step is often determining its typical value or "center." This is where <strong>Measures of Central Tendency</strong> come into play. These statistical metrics provide a single value that represents the middle or expected value of a dataset. They are essential for quickly grasping the general trend of massive amounts of information without looking at every single data point.</p>
+
+                    <h4>The Three M's</h4>
+                    <p>There are three primary measures used to find the center of a distribution, each with its own specific use cases and strengths depending on the shape of the data and the presence of outliers.</p>
+
+                    <ul>
+                        <li><strong>The Mean:</strong> Often referred to as the mathematical average, calculated by adding all values and dividing by the total count. It is highly sensitive to extreme outliers.</li>
+                        <li><strong>The Median:</strong> The literal middle value when the dataset is arranged in ascending order. It is the preferred measure when dealing with skewed data (e.g., income levels) because outliers do not drag it away from the center.</li>
+                        <li><strong>The Mode:</strong> The most frequently occurring value in a dataset. It is particularly useful for categorical data where mean and median cannot be computed.</li>
+                    </ul>
+
+                    <h4>Measures of Dispersion</h4>
+                    <p>Knowing the center is not enough; we must also know how spread out the data is. This is known as <strong>Dispersion</strong> or variability. The <strong>Range</strong> gives us a quick look at the overall spread (Highest value minus Lowest value). However, the <strong>Variance</strong> and <strong>Standard Deviation</strong> are far more powerful. They calculate the average distance of every single data point from the mean, providing a standardized way to measure volatility, risk, and reliability in our dataset.</p>
+                `
+            },
+            {
+                id: 3,
+                title: "Probability",
+                term: "midterm",
+                icon: "fa-dice",
+                subtopics: ["Basic Concepts", "Probability Rules", "Permutations and Combinations"],
+                discussion: `
+                    <h3>The Mathematics of Chance</h3>
+                    <p><strong>Probability</strong> is the mathematical framework for quantifying uncertainty. Whether forecasting the weather, predicting stock market movements, or assessing the risks of a new medical treatment, probability provides the tools necessary to evaluate the likelihood that a specific event will occur. It forms the crucial bridge between descriptive data analysis and inferential statistics.</p>
+
+                    <h4>Fundamental Rules and Events</h4>
+                    <p>To accurately calculate probabilities, we must define the "Sample Space" (all possible outcomes) and the "Event" (the specific outcome we are interested in). Probability is always a value between 0 (impossible) and 1 (certain). </p>
+
+                    <ul>
+                        <li><strong>The Addition Rule:</strong> Used when we want to find the probability of Event A <em>OR</em> Event B happening. It requires us to know if the events are <strong>mutually exclusive</strong> (cannot happen at the same time).</li>
+                        <li><strong>The Multiplication Rule:</strong> Used when we want to find the probability of Event A <em>AND</em> Event B occurring in sequence. We must determine if the events are <strong>independent</strong> or <strong>dependent</strong> (where the outcome of the first affects the second).</li>
+                        <li><strong>Complementary Events:</strong> The probability that an event will <em>not</em> happen, calculated as 1 minus the probability that it will happen.</li>
+                    </ul>
+
+                    <h4>Counting Techniques</h4>
+                    <p>When dealing with complex scenarios, manually listing all possible outcomes is impossible. This is where advanced counting techniques come in. <strong>Permutations</strong> are used when the order of the outcomes matters (like a combination lock), while <strong>Combinations</strong> are used when order does not matter (like drawing a hand of cards). These formulas are critical for determining the denominator in complex probability equations.</p>
+                `
+            },
+            {
+                id: 4,
+                title: "Probability Distribution",
+                term: "midterm",
+                icon: "fa-chart-area",
+                subtopics: ["Random Variable", "Discrete Distributions", "Continuous Distributions"],
+                discussion: `
+                    <h3>Mapping Outcomes to Probabilities</h3>
+                    <p>A <strong>Probability Distribution</strong> is a statistical function that describes all the possible values and likelihoods that a random variable can take within a given range. Think of it as a master blueprint that visually and mathematically maps out every single possibility of a random event alongside the exact chance of it happening.</p>
+
+                    <h4>Understanding Random Variables</h4>
+                    <p>At the core of probability distributions is the <strong>Random Variable</strong>. Unlike traditional algebra where "x" is an unknown fixed number, a random variable is a placeholder for numerical values that represent the outcomes of a statistical experiment. The type of random variable dictates the type of distribution curve we must use.</p>
+
+                    <ul>
+                        <li><strong>Discrete Probability Distributions:</strong> Used when the random variable can only take on specific, distinct values (usually integers). Common examples include the <strong>Binomial Distribution</strong> (for exactly two outcomes, like pass/fail) and the <strong>Poisson Distribution</strong> (for counting events over a specific interval of time).</li>
+                        <li><strong>Continuous Probability Distributions:</strong> Used when the random variable can take on an infinite number of values within any given range (e.g., precise measurements like time, weight, or distance). The probabilities are calculated as the area under the curve using calculus.</li>
+                    </ul>
+
+                    <p>By identifying the correct probability distribution for a given dataset, analysts can calculate expected values (the long-term average) and standard deviations, which are essential for making accurate predictive models in finance, engineering, and scientific research.</p>
+                `
+            },
+            {
+                id: 5,
+                title: "Normal Distribution",
+                term: "finals",
+                icon: "fa-bell",
+                subtopics: ["Characteristics of Normal Distribution", "Standard Normal Distribution", "Z-Scores", "Applications"],
+                discussion: `
+                    <h3>The Backbone of Statistics</h3>
+                    <p>The <strong>Normal Distribution</strong>, often referred to as the "Bell Curve," is arguably the most important continuous probability distribution in statistics. It is omnipresent in nature and society; from human heights and IQ scores to measurement errors and blood pressure, countless phenomena naturally follow this perfectly symmetrical shape.</p>
+
+                    <h4>Key Characteristics and Properties</h4>
+                    <p>The Normal Distribution is defined by two parameters: the population mean (which determines the center of the curve) and the population standard deviation (which determines the width or spread of the curve). Its symmetry ensures that exactly 50% of the data lies above the mean and 50% lies below it. Most importantly, the mean, median, and mode are all exactly the same value and are located at the peak of the curve.</p>
+
+                    <ul>
+                        <li><strong>The Empirical Rule (68-95-99.7 Rule):</strong> A fundamental property stating that roughly 68% of data falls within one standard deviation of the mean, 95% within two standard deviations, and 99.7% within three. This allows for incredibly rapid estimations.</li>
+                        <li><strong>Standard Normal Distribution:</strong> A special version of the normal curve that has been standardized to have a mean of 0 and a standard deviation of 1.</li>
+                        <li><strong>Z-Scores:</strong> A metric that standardizes a data point by calculating exactly how many standard deviations it is away from the mean. Z-scores allow us to compare entirely different datasets on the same universal scale.</li>
+                    </ul>
+
+                    <p>By utilizing Z-scores alongside a Z-table, analysts can determine the exact percentile ranking of any given value, making the normal distribution an invaluable tool for grading, quality control, and determining exact probabilities of continuous events.</p>
+                `
+            },
+            {
+                id: 6,
+                title: "Sampling Distribution & CLT",
+                term: "finals",
+                icon: "fa-users",
+                subtopics: ["Population vs Sample", "Sampling Distribution", "Central Limit Theorem (CLT)"],
+                discussion: `
+                    <h3>Bridging Samples to Populations</h3>
+                    <p>In statistics, we rarely have the time, money, or resources to survey an entire <strong>Population</strong>. Instead, we extract a smaller <strong>Sample</strong> and use its statistics (like the sample mean) to estimate the true population parameters. However, because samples vary, we must understand how these sample statistics behave across multiple random draws. This introduces the concept of the <strong>Sampling Distribution</strong>.</p>
+
+                    <h4>The Sampling Distribution</h4>
+                    <p>Imagine pulling thousands of different random samples of the same size from a population and calculating the mean for every single one. If you plotted all those sample means on a graph, you would create a Sampling Distribution. The standard deviation of this distribution is known as the <strong>Standard Error</strong>, which tells us how much our sample means are likely to fluctuate.</p>
+
+                    <ul>
+                        <li><strong>The Magic of the Central Limit Theorem (CLT):</strong> The CLT is arguably the most profound theorem in modern statistics. It states that as your sample size grows (typically n > 30), the sampling distribution of the sample mean will closely approximate a <strong>Normal Distribution</strong>.</li>
+                        <li><strong>Why CLT Matters:</strong> The incredible power of the CLT is that it holds true <em>regardless of the shape of the original population</em>. Whether the original data is heavily skewed, uniform, or completely chaotic, if you take large enough samples, the means of those samples will form a beautiful bell curve.</li>
+                    </ul>
+
+                    <p>Because of the Central Limit Theorem, we can confidently apply the properties of the normal distribution to sample means, allowing us to accurately construct confidence intervals and perform hypothesis tests on nearly any dataset in the real world.</p>
+                `
+            },
+            {
+                id: 7,
+                title: "Estimation & Hypothesis Testing",
+                term: "finals",
+                icon: "fa-check-to-slot",
+                subtopics: ["Confidence Intervals", "Null/Alternative Hypotheses", "p-value & Decision Rule"],
+                discussion: `
+                    <h3>Making Data-Driven Decisions</h3>
+                    <p><strong>Statistical Inference</strong> consists of two primary techniques: Estimation and Hypothesis Testing. Estimation involves calculating a range of values that likely contains the true population parameter, while Hypothesis Testing provides a rigorous, mathematical framework for making objective decisions or validating claims based on limited sample data.</p>
+
+                    <h4>Estimation and Confidence Intervals</h4>
+                    <p>A point estimate (like a single sample mean) is rarely exactly right. Instead, statisticians create a <strong>Confidence Interval</strong>. By applying a Margin of Error around our sample statistic, we can state with a specific level of confidence (e.g., 95%) that the true population parameter falls within that range. It accounts for sampling error and provides a safety net for our predictions.</p>
+
+                    <ul>
+                        <li><strong>Null Hypothesis (H0) and Alternative Hypothesis (H1):</strong> The Null represents the status quo or "no effect," while the Alternative represents the new claim we are trying to prove. We always assume the Null is true until the data proves otherwise beyond a reasonable doubt.</li>
+                        <li><strong>Level of Significance (Alpha):</strong> The probability of making a Type I Error (rejecting a true null hypothesis). This threshold is usually set at 0.05 (5%) before the test begins.</li>
+                        <li><strong>The p-value Method:</strong> The p-value is the exact probability of observing our sample data assuming the Null Hypothesis is true. If the p-value is extremely low (lower than our Alpha), we reject the Null Hypothesis. "If the p is low, the null must go!"</li>
+                    </ul>
+
+                    <p>Mastering these testing protocols—including distinguishing between one-tailed and two-tailed tests—is critical for anyone involved in research, A/B testing, or quality assurance, as it removes human bias from the decision-making process.</p>
+                `
+            },
+            {
+                id: 8,
+                title: "Correlation & Regression",
+                term: "finals",
+                icon: "fa-chart-line",
+                subtopics: ["Scatter Plot", "Pearson Correlation", "Linear Regression", "Coefficient of Determination"],
+                discussion: `
+                    <h3>Analyzing Relationships and Forecasting</h3>
+                    <p>In real-world scenarios, variables rarely exist in isolation; they interact and influence one another. <strong>Correlation and Regression Analysis</strong> are powerful statistical techniques used to investigate, quantify, and model the relationships between two or more continuous numerical variables. They allow us to answer questions like: "Does advertising spend affect sales?" or "Can we predict housing prices based on square footage?"</p>
+
+                    <h4>Understanding Correlation</h4>
+                    <p>The first step in analyzing relationships is plotting the data on a <strong>Scatter Plot</strong> to visually inspect trends. To quantify this relationship mathematically, we calculate the <strong>Pearson Correlation Coefficient (r)</strong>. This metric tells us two critical things about the linear relationship between variables:</p>
+
+                    <ul>
+                        <li><strong>Direction:</strong> A positive (r > 0) means as one variable increases, so does the other. A negative (r < 0) means as one increases, the other decreases.</li>
+                        <li><strong>Strength:</strong> The closer the 'r' value is to +1 or -1, the stronger the linear relationship. A value near 0 indicates little to no linear relationship.</li>
+                        <li><em>Crucial Warning:</em> Correlation does NOT imply causation. Just because two variables move together does not mean one causes the other to happen.</li>
+                    </ul>
+
+                    <h4>Predictive Modeling with Regression</h4>
+                    <p>While correlation tells us a relationship exists, <strong>Simple Linear Regression</strong> takes it a step further by finding the "Line of Best Fit." This generates a mathematical equation (y = mx + b) that allows us to actively predict the value of a dependent variable based on a known independent variable. We then use the <strong>Coefficient of Determination (r²)</strong> to evaluate how accurate our predictive model is, making this an essential skill in machine learning and predictive analytics.</p>
+                `
+            },
+            {
+                id: 9,
+                title: "Statistical Software Application",
+                term: "finals",
+                icon: "fa-laptop-code",
+                subtopics: ["Data Entry", "Descriptive Statistics", "Correlation & Regression Analysis", "Interpretation"],
+                discussion: `
+                    <h3>Modern Data Analysis Tools</h3>
+                    <p>While understanding the underlying mathematical formulas of statistics is crucial, manually calculating complex equations for massive datasets is highly impractical and prone to human error. This is where <strong>Statistical Software Applications</strong> like Microsoft Excel and SPSS (Statistical Package for the Social Sciences) become indispensable. These tools automate the heavy lifting, allowing analysts to focus entirely on interpreting the results and drawing actionable insights.</p>
+
+                    <h4>Practical Application and Workflows</h4>
+                    <p>Proficiency in statistical software bridges the gap between academic theory and real-world industry demands. A typical workflow involves several critical phases that students must master to be effective data analysts:</p>
+
+                    <ul>
+                        <li><strong>Data Entry and Management:</strong> The initial phase involves importing raw data, cleaning it for inconsistencies, handling missing values, and formatting variables correctly (e.g., defining them as nominal, ordinal, or scale in SPSS).</li>
+                        <li><strong>Automating Descriptive Statistics:</strong> Using built-in functions to instantly generate comprehensive summary tables, histograms, scatter plots, and measures of central tendency across thousands of rows of data simultaneously.</li>
+                        <li><strong>Executing Advanced Tests:</strong> Running complex Inferential procedures—such as T-tests, ANOVAs, Correlation matrices, and Regression models—with just a few clicks.</li>
+                    </ul>
+
+                    <p>The ultimate and most valuable skill acquired in this unit is <strong>Output Interpretation</strong>. The software will generate massive tables of p-values, F-statistics, and coefficients. An expert must be able to read these tables, isolate the statistically significant findings, and translate those numbers into plain, actionable language for stakeholders.</p>
+                `
+            }
+        ];
+
+        // Global State
+        let currentFilterTerm = 'all';
+        let currentSearchQuery = '';
+
+        // Render Lessons to Grid
+        function renderLessons() {
+            const grid = document.getElementById('lessons-grid');
+            grid.innerHTML = ''; // clear current
+
+            let filteredData = lessonsData;
+
+            // Apply Term Filter
+            if (currentFilterTerm !== 'all') {
+                filteredData = filteredData.filter(lesson => lesson.term === currentFilterTerm);
+            }
+
+            // Apply Search Query Filter
+            if (currentSearchQuery.trim() !== '') {
+                const query = currentSearchQuery.toLowerCase();
+                filteredData = filteredData.filter(lesson =>
+                    lesson.title.toLowerCase().includes(query) ||
+                    lesson.subtopics.some(sub => sub.toLowerCase().includes(query)) ||
+                    lesson.discussion.toLowerCase().includes(query)
+                );
+            }
+
+            // Handle Empty State
+            if (filteredData.length === 0) {
+                grid.innerHTML = `<div class="col-span-full flex flex-col items-center justify-center text-gray-400 py-16 animate-fade-in-up">
+                    <i class="fas fa-search-minus text-4xl mb-4 text-probsta/50"></i>
+                    <p class="text-lg">No lessons found matching your criteria.</p>
+                </div>`;
+                return;
+            }
+
+            filteredData.forEach((lesson, index) => {
+                // Shorten subtopics for card preview (max 3)
+                const previewSubtopics = lesson.subtopics.slice(0, 3);
+                const hasMore = lesson.subtopics.length > 3;
+
+                let tagsHTML = previewSubtopics.map(sub =>
+                    `<span class="px-2 py-1 text-[11px] font-medium bg-black/40 border border-white/10 rounded-md text-gray-300 group-hover:border-probsta/40 group-hover:text-white transition-colors truncate max-w-full">${sub}</span>`
+                ).join('');
+
+                if (hasMore) {
+                    tagsHTML += `<span class="px-2 py-1 text-[11px] font-medium bg-probsta/20 border border-probsta/30 rounded-md text-probsta">+${lesson.subtopics.length - 3} more</span>`;
+                }
+
+                const delay = index * 0.1; // staggered animation
+
+                const cardHTML = `
+                    <article onclick="openModal(${lesson.id})" class="topic-card glass-card rounded-2xl p-6 flex flex-col relative overflow-hidden group cursor-pointer animate-pop-in h-full" style="animation-delay: ${delay}s; opacity: 0;">
+                        <div class="absolute -top-24 -right-24 w-48 h-48 bg-probsta rounded-full opacity-10 blur-3xl group-hover:opacity-30 transition-opacity duration-500"></div>
+                        
+                        <div class="flex items-start gap-4 mb-4 relative z-10">
+                            <div class="w-12 h-12 shrink-0 rounded-xl bg-white/10 flex items-center justify-center text-probsta text-xl shadow-inner border border-white/5 group-hover:scale-110 group-hover:bg-probsta group-hover:text-white transition-all duration-300">
+                                <i class="fas ${lesson.icon}"></i>
+                            </div>
+                            <div>
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-probsta/80 block mb-1">${lesson.term}</span>
+                                <h3 class="text-lg font-bold text-white leading-tight group-hover:text-probsta transition-colors">Unit ${lesson.id}: ${lesson.title}</h3>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3 relative z-10 flex-grow mt-2">
+                            <div class="flex flex-wrap gap-1.5">
+                                ${tagsHTML}
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 pt-4 border-t border-white/10 relative z-10 flex justify-between items-center text-sm text-probsta font-semibold opacity-60 group-hover:opacity-100 transition-opacity duration-300">
+                            <span>View Full Lesson Details</span>
+                            <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </article>
+                `;
+                grid.innerHTML += cardHTML;
+            });
+        }
+
+        // Handle Filter Buttons
+        function filterLessons(term) {
+            currentFilterTerm = term;
+            // Update button styles
+            const buttons = ['all', 'midterm', 'finals'];
+            buttons.forEach(btnType => {
+                const btn = document.getElementById(`btn-${btnType}`);
+                if (btnType === term) {
+                    btn.className = "filter-btn px-6 py-2 rounded-full bg-probsta text-white shadow-[0_0_15px_rgba(255,136,32,0.4)] font-medium text-sm transition-all duration-300 border border-transparent hover:scale-105";
+                } else {
+                    btn.className = "filter-btn px-6 py-2 rounded-full glass text-gray-300 hover:text-white hover:border-probsta/50 font-medium text-sm transition-all duration-300 hover:scale-105";
+                }
+            });
+
+            renderLessons();
+        }
+
+        // Handle Search Input
+        function handleSearch() {
+            currentSearchQuery = document.getElementById('search-input').value;
+            renderLessons();
+        }
+
+        // Modal Logic
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const modalContent = document.getElementById('modal-content');
+        const modalScrollArea = document.getElementById('modal-scroll-area');
+        const progressBar = document.getElementById('progress-bar');
+
+        function openModal(lessonId) {
+            const lesson = lessonsData.find(l => l.id === lessonId);
+            if (!lesson) return;
+
+            // Populate data
+            document.getElementById('modal-title').textContent = `Unit ${lesson.id}: ${lesson.title}`;
+            document.getElementById('modal-term').textContent = `${lesson.term} Examination Topic`;
+            document.getElementById('modal-icon').className = `fas ${lesson.icon}`;
+
+            const discussionContainer = document.getElementById('modal-discussion');
+            discussionContainer.innerHTML = lesson.discussion;
+
+            // Reset progress bar & scroll position
+            progressBar.style.width = '0%';
+            modalScrollArea.scrollTop = 0;
+
+            // Show modal
+            modalBackdrop.classList.remove('hidden');
+            setTimeout(() => {
+                modalBackdrop.classList.remove('opacity-0');
+                modalContent.classList.remove('hidden-modal');
+            }, 10);
+
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event) {
+            modalBackdrop.classList.add('opacity-0');
+            modalContent.classList.add('hidden-modal');
+
+            setTimeout(() => {
+                modalBackdrop.classList.add('hidden');
+            }, 300);
+
+            document.body.style.overflow = 'auto';
+        }
+
+        // Scroll Progress logic inside modal
+        modalScrollArea.addEventListener('scroll', () => {
+            const scrollTop = modalScrollArea.scrollTop;
+            const scrollHeight = modalScrollArea.scrollHeight - modalScrollArea.clientHeight;
+            // Prevent division by zero if content isn't scrollable
+            const scrollPercentage = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+            progressBar.style.width = scrollPercentage + '%';
+        });
+
+        // Initialize Vanta.js Background on Load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderLessons();
+
+            // Apply exact requested Vanta settings to the hero container ONLY
+            VANTA.DOTS({
+                el: "#vanta-bg",
+                mouseControls: true,
+                touchControls: true,
+                gyroControls: false,
+                minHeight: 200.00,
+                minWidth: 200.00,
+                scale: 1.00,
+                scaleMobile: 1.00,
+                color: 0xff8820,
+                color2: 0xff8820,
+                backgroundColor: 0x222222,
+                size: 3.00,
+                spacing: 35.00,
+                showLines: true
+            });
+
+            // Escape key closes modal
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !modalBackdrop.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
